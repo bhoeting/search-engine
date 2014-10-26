@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "cheerio": "^0.17.0",
+    "colors": "^1.0.3",
+    "mongoose": "^3.8.18",
+    "request": "^2.46.0"
+  }
+}
