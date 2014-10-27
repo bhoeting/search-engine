@@ -4,8 +4,8 @@ var Schema = mongoose.Schema;
 var linkSchema = new Schema({
   url: {type: String, unique: true},
   text: String,
-  indexed: Boolean,
-  occurances: {type: Number, default: 1}
+  indexed: {type: Boolean, default: false},
+  occurrences: {type: Number, default: 1}
 });
 
 mongoose.model('Link', linkSchema);

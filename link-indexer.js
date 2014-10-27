@@ -1,6 +1,5 @@
 require('./db');
 var mongoose = require('mongoose');
-mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 
 module.exports = LinkIndexer;
 
@@ -13,16 +12,16 @@ function LinkIndexer() {
 }
 
 /**
- * Insert a link
+ * Insert a link or update its occurrence
  * @param  {Object} link
  * @return {void}
  */
 
-LinkIndexer.prototype.index = function(link) {
-  this.Link.collection.update({url: link.url}, {$inc: {occurances: 1}}, function() {});
-  new this.Link(link).save(function() {});
+LinkIndexer.prototype.index = function(link, callback) {
+  this.Link.findOneAndUpdate(link, {$inc: {occurrences: 1}, $setOnInsert: {indexed: false}}, {upsert: true}, function() {
+    callback();
+  });
 };
-
 
 /**
  * Batch insert links
@@ -30,8 +29,20 @@ LinkIndexer.prototype.index = function(link) {
  * @return {void}
  */
 
-LinkIndexer.prototype.indexBatch = function(links) {
-  this.Link.collection.insert(links, function(err) {
-    if (err) console.log(err);
-  });
+LinkIndexer.prototype.batchIndex = function(links) {
+  for (var i in links) {
+    new this.Link(links[i]).save();
+  }
+};
+
+/**
+ * Get the first link that hasn't been indexed
+ * @return {Object}
+ */
+
+LinkIndexer.prototype.getNextLink = function(callback) {
+  var link = this.Link.findOneAndUpdate(
+    {indexed: false}, {$set: {indexed: true}}, {new: true}, function(err, link) {
+      callback(link);
+    });
 };
