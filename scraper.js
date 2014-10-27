@@ -1,10 +1,18 @@
+/**
+ * Dependencies
+ */
+
 var request = require('request');
 var cheerio = require('cheerio');
+
+/**
+ * Export the Scraper
+ */
 
 module.exports = Scraper;
 
 /**
- * Constructor
+ * Scraper Constructor
  */
 
 function Scraper() {
@@ -13,19 +21,18 @@ function Scraper() {
 
 /**
  * Return all the urls and text from a webpage
- * @param  {string}   startUrl
+ *
+ * @param  {String}   startUrl
  * @param  {Function} callback
- * @return {object}
+ * @return {Object}
  */
 
 Scraper.prototype.scrape = function(startUrl, callback) {
   var data = '';
   request.get(startUrl).on('response', function(response) {
-
     response.on('data', function(html) {
         data += html;
     });
-
     response.on('end', function(err) {
       if (response.headers['content-type'].indexOf('text/html') != -1) {
         callback(parseHTML(data.toString('utf-8')), startUrl);
@@ -33,12 +40,12 @@ Scraper.prototype.scrape = function(startUrl, callback) {
         callback(null, startUrl);
       }
     });
-
   });
 };
 
 /**
  * Get all the links and text from an HTML string
+ *
  * @param  {String} html
  * @return {Object}
  */
@@ -54,7 +61,7 @@ function parseHTML(html) {
     var link = $(this);
     var url = link.attr('href');
     var linkText = link.text();
-    if (url !== undefined && url.indexOf('http') != -1) {
+    if (url !== undefined && url.indexOf('http') === 0) {
       links.push({url: url, text: linkText, indexed: false});
     }
   });

@@ -1,10 +1,23 @@
+/**
+ * Require the model and mongo connection
+ */
+
 require('./db');
+
+/**
+ * Dependencies
+ */
+
 var mongoose = require('mongoose');
+
+/**
+ * Export the LinkIndexer
+ */
 
 module.exports = LinkIndexer;
 
 /**
- * Constructor
+ * LinkIndexer constructor
  */
 
 function LinkIndexer() {
@@ -12,21 +25,23 @@ function LinkIndexer() {
 }
 
 /**
- * Insert a link or update its occurrence
+ * Index a link or update its occurrences if it exists
+ *
  * @param  {Object} link
- * @return {void}
  */
 
 LinkIndexer.prototype.index = function(link, callback) {
-  this.Link.findOneAndUpdate(link, {$inc: {occurrences: 1}, $setOnInsert: {indexed: false}}, {upsert: true}, function() {
-    if (callback !== undefined) callback();
+  this.Link.findOneAndUpdate(link,
+    {$inc: {occurrences: 1}, $setOnInsert: {indexed: false}},
+      {upsert: true}, function() {
+        if (callback !== undefined) callback();
   });
 };
 
 /**
- * Batch insert links
+ * Index multiple links at once
+ *
  * @param  {Array} links
- * @return {void}
  */
 
 LinkIndexer.prototype.batchIndex = function(links, callback) {
@@ -38,17 +53,29 @@ LinkIndexer.prototype.batchIndex = function(links, callback) {
 };
 
 /**
- * Get the first link that hasn't been indexed
+ * Get the first link that hasn't been
+ * indexed, mark it as indexed, and 
+ * run a callback on the result
+ *
  * @return {Object}
  */
 
 LinkIndexer.prototype.getNextLink = function(callback) {
-  this.Link.findOneAndUpdate(
-    {indexed: false}, {$set: {indexed: true}}, {new: true}, function(err, link) {
-      if (err) {
-        console.log(err);
-      } else {
-        callback(link);
-      }
+  this.Link.findOneAndUpdate({indexed: false},
+    {$set: {indexed: true}}, {new: true}, function(err, link) {
+      callback(link);
     });
+};
+
+/**
+ * Get the amount of links that have been indexed
+ * and run a callback on the count
+ *
+ * @param  {Function} callback
+ */
+
+LinkIndexer.prototype.countLinks = function(callback) {
+  this.Link.count(function(err, count) {
+    callback(count);
+  });
 };
