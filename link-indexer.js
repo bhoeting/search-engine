@@ -19,7 +19,7 @@ function LinkIndexer() {
 
 LinkIndexer.prototype.index = function(link, callback) {
   this.Link.findOneAndUpdate(link, {$inc: {occurrences: 1}, $setOnInsert: {indexed: false}}, {upsert: true}, function() {
-    callback();
+    if (callback !== undefined) callback();
   });
 };
 
@@ -29,10 +29,12 @@ LinkIndexer.prototype.index = function(link, callback) {
  * @return {void}
  */
 
-LinkIndexer.prototype.batchIndex = function(links) {
+LinkIndexer.prototype.batchIndex = function(links, callback) {
   for (var i in links) {
-    new this.Link(links[i]).save();
+    this.index(links[i]);
   }
+
+  if (callback !== undefined) callback();
 };
 
 /**
@@ -41,8 +43,12 @@ LinkIndexer.prototype.batchIndex = function(links) {
  */
 
 LinkIndexer.prototype.getNextLink = function(callback) {
-  var link = this.Link.findOneAndUpdate(
+  this.Link.findOneAndUpdate(
     {indexed: false}, {$set: {indexed: true}}, {new: true}, function(err, link) {
-      callback(link);
+      if (err) {
+        console.log(err);
+      } else {
+        callback(link);
+      }
     });
 };
