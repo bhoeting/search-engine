@@ -24,23 +24,26 @@ function Scraper() {
  *
  * @param  {String}   startUrl
  * @param  {Function} callback
- * @return {Object}
  */
 
-Scraper.prototype.scrape = function(startUrl, callback) {
+Scraper.prototype.scrape = function(url, callback) {
   var data = '';
-  request.get(startUrl).on('response', function(response) {
-    response.on('data', function(html) {
-        data += html;
+  request.get(url)
+    .on('error', function(err) {
+      callback(null, url);
+    })
+    .on('response', function(response) {
+      response.on('data', function(html) {
+          data += html;
+      });
+      response.on('end', function(err) {
+        if (response.headers['content-type'].indexOf('text/html') != -1) {
+          callback(parseHTML(data.toString('utf-8')), url);
+        } else {
+          callback(null, url);
+        }
+      });
     });
-    response.on('end', function(err) {
-      if (response.headers['content-type'].indexOf('text/html') != -1) {
-        callback(parseHTML(data.toString('utf-8')), startUrl);
-      } else {
-        callback(null, startUrl);
-      }
-    });
-  });
 };
 
 /**

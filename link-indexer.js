@@ -57,7 +57,7 @@ LinkIndexer.prototype.batchIndex = function(links, callback) {
  * indexed, mark it as indexed, and 
  * run a callback on the result
  *
- * @return {Object}
+ * @param  {Function} callback
  */
 
 LinkIndexer.prototype.getNextLink = function(callback) {
