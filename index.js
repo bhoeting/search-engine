@@ -1,43 +1,19 @@
-/**
- * Require functions/classes
- */
+var LinkIndexer = require('./crawler/link-indexer');
+var express = require('express');
+var jade = require('jade');
+var path = require('path');
+var app = express();
 
-var logger = require('./logger');
-var Scraper = require('./scraper');
-var LinkIndexer = require('./link-indexer');
+app.set('views', path.join( __dirname, 'views'));
+app.set('view engine', 'jade');
 
-var scraper = new Scraper();
 var indexer = new LinkIndexer();
 
-/**
- * Recursively scrape a webpage and index all of its links
- */
-
-function transverseTheWeb() {
-  indexer.getNextLink(function(link) {
-    scraper.scrape(link.url, function(result, url) {
-      if (result !== null) {
-        logger.logScrapingResult(result, url);
-        indexer.batchIndex(result.links, function() {
-          transverseTheWeb();
-        });
-      } else {
-        transverseTheWeb();
-      }
-    });
+app.get('/search', function(req, res) {
+  var query = req.query.search ? req.query.search : '';
+  indexer.search(search, function(results) {
+    res.render('index', { results: results });
   });
-}
-
-// If no links are indexed, start reddit at reddit
-indexer.countLinks(function(count) {
-  if (count <= 0) {
-    indexer.index({
-      url: 'http://www.reddit.com/',
-      text: 'The front page of the internet.'
-    }, function() {
-      transverseTheWeb(0, 0);
-    });
-  } else {
-    transverseTheWeb();
-  }
 });
+
+app.listen(3000);

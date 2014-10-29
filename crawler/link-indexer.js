@@ -79,3 +79,16 @@ LinkIndexer.prototype.countLinks = function(callback) {
     callback(count);
   });
 };
+
+/**
+ * Search to DB for links with text matching a query
+ *
+ * @param  {String}   query
+ * @param  {Function} callback
+ */
+
+LinkIndexer.prototype.search = function(query, callback) {
+  this.Link.find({text: new RegExp(query)}, function(err, links) {   
+    callback(links);
+  });
+};

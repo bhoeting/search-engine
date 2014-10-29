@@ -1,0 +1,15 @@
+doctype html
+html(lang="en")
+  head
+    title="Search engine"
+  body
+    h1 Search engine
+
+    //- Seach form
+    form(action= '' method= 'GET')
+      input(name= 'search' placeholder= 'Search query')
+
+    //- Results
+    each result in results
+      div
+        a(href= result.url)= result.text

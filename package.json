@@ -2,7 +2,10 @@
   "dependencies": {
     "cheerio": "^0.17.0",
     "colors": "^1.0.3",
+    "express": "^4.10.0",
+    "jade": "^1.7.0",
     "mongoose": "^3.8.18",
-    "request": "^2.46.0"
+    "request": "^2.46.0",
+    "sprintf-js": "^1.0.2"
   }
 }
