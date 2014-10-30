@@ -15,9 +15,10 @@ var indexer = new LinkIndexer();
 
 function transverseTheWeb() {
   indexer.getNextLink(function(link) {
-    scraper.scrape(link.url, function(result, url) {
+    scraper.scrape(link.url, function(result, url, time) {
       if (result !== null) {
-        logger.logScrapingResult(result, url);
+        indexer.indexPageContent(url, result.body, result.title);
+        logger.logScrapingResult(result, url, time);
         indexer.batchIndex(result.links, function() {
           transverseTheWeb();
         });
@@ -32,8 +33,8 @@ function transverseTheWeb() {
 indexer.countLinks(function(count) {
   if (count <= 0) {
     indexer.index({
-      url: 'http://www.cnn.com/',
-      text: 'The front page of the internet.'
+      url: 'http://www.reddit.com/',
+      title: 'The front page of the internet.'
     }, function() {
       transverseTheWeb(0, 0);
     });

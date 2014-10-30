@@ -4,6 +4,8 @@
 
 var request = require('request');
 var cheerio = require('cheerio');
+var urlParser = require('url');
+var validator = require('validator');
 
 /**
  * Export the Scraper
@@ -27,23 +29,29 @@ function Scraper() {
  */
 
 Scraper.prototype.scrape = function(url, callback) {
-  var data = '';
-  request.get(url)
-    .on('error', function(err) {
-      callback(null, url);
-    })
-    .on('response', function(response) {
-      response.on('data', function(html) {
-          data += html;
+  if (validator.isURL(url)) {
+    var data = '';
+    var start = new Date();
+    request.get(url)
+      .on('error', function(err) {
+        callback(null, url);
+      })
+      .on('response', function(response) {
+        response.on('data', function(html) {
+            data += html;
+        });
+        response.on('end', function(err) {
+          time = new Date() - start;
+          if (response.headers['content-type'].indexOf('text/html') != -1) {
+            callback(parseHTML(data.toString('utf-8')), url, time);
+          } else {
+            callback(null, url);
+          }
+        });
       });
-      response.on('end', function(err) {
-        if (response.headers['content-type'].indexOf('text/html') != -1) {
-          callback(parseHTML(data.toString('utf-8')), url);
-        } else {
-          callback(null, url);
-        }
-      });
-    });
+  } else {
+    callback(null, url);
+  }
 };
 
 /**
@@ -54,7 +62,7 @@ Scraper.prototype.scrape = function(url, callback) {
  */
 
 function parseHTML(html) {
-  var text = '';
+  var body, title;
   var links = [];
 
   var $ = cheerio.load(html);
@@ -64,8 +72,14 @@ function parseHTML(html) {
     var link = $(this);
     var url = link.attr('href');
     var linkText = link.text();
-    if (url !== undefined && url.indexOf('http') === 0) {
-      links.push({url: url, text: linkText, indexed: false});
+    if (url !== undefined) {
+      var protocol = urlParser.parse(url).protocol;
+      if (protocol == 'http:' || protocol == 'https:') {
+        links.push({
+          url: url,
+          text: linkText,
+        });
+      }
     }
   });
 
@@ -74,9 +88,18 @@ function parseHTML(html) {
   $('style').remove();
 
   // Remove html tags & entites but keep their content
-  text = ($('html').html())
-    .replace(/(<([^>]+)>)/ig, '')
-    .replace(/&(?:[a-z\d]+|#\d+|#x[a-f\d]+);/ig, '');
+  body = ($('html').html());
 
-  return {links: links, text: text};
+  if (body !== null) {
+    body = body.replace(/(<([^>]+)>)/ig, '');
+    body = body.replace(/&(?:[a-z\d]+|#\d+|#x[a-f\d]+);/ig, '');
+  }
+
+  title = $('title').text();
+
+  return {
+    links: links,
+    body: body,
+    title: title
+  };
 }

@@ -1,7 +1,9 @@
 doctype html
-html(lang="en")
+html(lang='en')
   head
-    title="Search engine"
+    title='Search engine'
+    link(rel='stylesheet' href='/bower/bootstrap/dist/css/bootstrap.min.css')
+
   body
     h1 Search engine
 
@@ -12,4 +14,8 @@ html(lang="en")
     //- Results
     each result in results
       div
-        a(href= result.url)= result.text
+        a(href= result.url)= result.title
+
+  script(src='/bower/jquery/dist/jquery.min.js')
+  script(src='/bower/bootstrap/dist/js/bootstrap.min.js')
+  //- End body

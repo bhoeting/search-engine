@@ -52,6 +52,18 @@ LinkIndexer.prototype.batchIndex = function(links, callback) {
   if (callback !== undefined) callback();
 };
 
+
+/**
+ * Update the body and title fields on a link with the matching url
+ *
+ * @param  {String} url
+ * @param  {String} body
+ */
+
+LinkIndexer.prototype.indexPageContent = function(url, body, title) {
+  this.Link.update({url: url}, {$set: {body: body, title: title}}, function() {});
+};
+
 /**
  * Get the first link that hasn't been
  * indexed, mark it as indexed, and 
@@ -88,7 +100,7 @@ LinkIndexer.prototype.countLinks = function(callback) {
  */
 
 LinkIndexer.prototype.search = function(query, callback) {
-  this.Link.find({text: new RegExp(query)}, function(err, links) {   
+  this.Link.find({body: new RegExp(query)}, function(err, links) {   
     callback(links);
   });
 };
