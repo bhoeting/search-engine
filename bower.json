@@ -1,0 +1,20 @@
+{
+  "name": "simple-crawler",
+  "main": "index.js",
+  "version": "0.0.0",
+  "homepage": "https://github.com/bhoeting/simple-crawler",
+  "authors": [
+    "Brennan Hoeting <brennan.hoeting@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.0"
+  }
+}
