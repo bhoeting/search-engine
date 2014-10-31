@@ -1,0 +1,9 @@
+extends base
+
+block content
+  .container
+    //- Results
+    .results
+      each result in results
+        a.result-link(href= result.url)= result.title
+

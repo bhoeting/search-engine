@@ -100,7 +100,9 @@ LinkIndexer.prototype.countLinks = function(callback) {
  */
 
 LinkIndexer.prototype.search = function(query, callback) {
-  this.Link.find({body: new RegExp(query)}, function(err, links) {   
-    callback(links);
+  var search = new RegExp(query);
+
+  this.Link.search({query: query, fuzziness: 0.5, fields: ['title', 'text', 'body']}, function(err, results) {
+    callback(results);
   });
 };

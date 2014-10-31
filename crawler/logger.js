@@ -9,7 +9,7 @@ var sprintf = require('sprintf-js').sprintf;
  * Constants
  */
 
-var MAX_URL_LEN = 70;
+var MAX_URL_LEN = 30;
 
 /**
  * Log the number of links obtained from

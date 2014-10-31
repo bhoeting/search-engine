@@ -1,0 +1,25 @@
+@import url(http://fonts.googleapis.com/css?family=Italiana);
+
+h1 {
+  font-family: 'Italiana';
+  font-size: 130px;
+  font-weight: 200;
+}
+
+.results {
+  padding: 10px;
+}
+
+.result-link {
+  display: block;
+  font-size: 20px; 
+  padding-bottom: 10px;
+}
+
+.input-query-lg {
+  border-radius: 0px;
+  padding: 20px;
+  width: 100%;
+  font-size: 36px;
+  border: black dotted 1px;
+}

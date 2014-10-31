@@ -31,16 +31,16 @@ app.use('/bower',  express.static(__dirname + '/bower_components'));
 app.get('/search', function(req, res) {
   var search = req.query.search ? req.query.search : '';
   indexer.search(search, function(results) {
-    res.render('index', { results: results });
+    res.render('results', { results: results });
   });
 });
 
 /**
- * Redirect to the search page
+ * Render the index page
  */
 
 app.get('/', function(req, res) {
-  res.redirect('/search');
+  res.render('index');
 });
 
 /**
