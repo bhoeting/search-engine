@@ -2,13 +2,13 @@
  * Require the model and mongo connection
  */
 
-require('./db');
 
 /**
  * Dependencies
  */
 
 var mongoose = require('mongoose');
+var textSearch = require('mongoose-text-search');
 
 /**
  * Export the LinkIndexer
@@ -21,7 +21,22 @@ module.exports = LinkIndexer;
  */
 
 function LinkIndexer() {
-  this.Link = mongoose.model('Link');
+  var LinkSchema = new mongoose.Schema({
+    url: {type: String, unique: true},
+    text: {type: String, default: ''},
+    body: {type: String, default: ''},
+    title: {type: String, default: ''},
+    indexed: {type: Boolean, default: false},
+    occurrences: {type: Number, default: 1}
+  });
+
+  LinkSchema.index({text: 'text'});
+  LinkSchema.index({body: 'text'});
+  LinkSchema.index({title: 'text'});
+
+  LinkSchema.plugin(textSearch);
+  this.Link = mongoose.model('Link', LinkSchema);
+  mongoose.connect('mongodb://localhost/links');
 }
 
 /**
@@ -100,9 +115,8 @@ LinkIndexer.prototype.countLinks = function(callback) {
  */
 
 LinkIndexer.prototype.search = function(query, callback) {
-  var search = new RegExp(query);
-
-  this.Link.search({query: query, fuzziness: 0.5, fields: ['title', 'text', 'body']}, function(err, results) {
+  this.Link.textSearch(query, {filter: {indexed: true}}, function(err, results) {
+    if (err) console.log(err);
     callback(results);
   });
 };

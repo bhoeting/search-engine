@@ -31,3 +31,6 @@ var Link = mongoose.model('Link', LinkSchema);
  */
 
 mongoose.connect('mongodb://localhost/links');
+
+module.exports.LinkSchema = LinkSchema;
+module.exports.Link = Link;

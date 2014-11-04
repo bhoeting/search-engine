@@ -5,5 +5,5 @@ block content
     //- Results
     .results
       each result in results
-        a.result-link(href= result.url)= result.title
-
+        a.result-link(href= result.obj.url)= result.obj.url
+        p= result.obj.indexed
