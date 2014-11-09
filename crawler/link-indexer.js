@@ -1,7 +1,3 @@
-/**
- * Require the model and mongo connection
- */
-
 
 /**
  * Dependencies
@@ -21,6 +17,7 @@ module.exports = LinkIndexer;
  */
 
 function LinkIndexer() {
+
   var LinkSchema = new mongoose.Schema({
     url: {type: String, unique: true},
     text: {type: String, default: ''},
@@ -36,6 +33,7 @@ function LinkIndexer() {
 
   LinkSchema.plugin(textSearch);
   this.Link = mongoose.model('Link', LinkSchema);
+
   mongoose.connect('mongodb://localhost/links');
 }
 
@@ -108,14 +106,14 @@ LinkIndexer.prototype.countLinks = function(callback) {
 };
 
 /**
- * Search to DB for links with text matching a query
+ * Search the DB for links with text matching a query
  *
  * @param  {String}   query
  * @param  {Function} callback
  */
 
 LinkIndexer.prototype.search = function(query, callback) {
-  this.Link.textSearch(query, {filter: {indexed: true}}, function(err, results) {
+  this.Link.textSearch(query, function(err, results) {
     if (err) console.log(err);
     callback(results);
   });

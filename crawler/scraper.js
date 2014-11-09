@@ -42,7 +42,7 @@ Scraper.prototype.scrape = function(url, callback) {
         });
         response.on('end', function(err) {
           time = new Date() - start;
-          if (response.headers['content-type'].indexOf('text/html') != -1) {
+          if (response !== undefined && response.headers['content-type'].indexOf('text/html') != -1) {
             callback(parseHTML(data.toString('utf-8')), url, time);
           } else {
             callback(null, url);
@@ -55,7 +55,7 @@ Scraper.prototype.scrape = function(url, callback) {
 };
 
 /**
- * Get all the links and text from an HTML string
+ * Get all the links, text, and title from a webpage
  *
  * @param  {String} html
  * @return {Object}
@@ -75,10 +75,7 @@ function parseHTML(html) {
     if (url !== undefined) {
       var protocol = urlParser.parse(url).protocol;
       if (protocol == 'http:' || protocol == 'https:') {
-        links.push({
-          url: url,
-          text: linkText,
-        });
+        links.push({ url: url, text: linkText });
       }
     }
   });

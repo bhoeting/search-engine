@@ -29,7 +29,7 @@ function transverseTheWeb() {
   });
 }
 
-// If no links are indexed, start reddit at reddit
+// If no links are indexed, start at reddit
 indexer.countLinks(function(count) {
   if (count <= 0) {
     indexer.index({

@@ -2,8 +2,8 @@ extends base
 
 block content
   .container
-    //- Results
+    form(action='search' method= 'GET')
+      input#input-query.input-query-md(name= 'search' value= query autocomplete= 'false')
     .results
       each result in results
         a.result-link(href= result.obj.url)= result.obj.url
-        p= result.obj.indexed
