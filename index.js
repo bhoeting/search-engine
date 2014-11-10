@@ -30,8 +30,15 @@ app.use('/bower',  express.static(__dirname + '/bower_components'));
 
 app.get('/search', function(req, res) {
   var search = req.query.search ? req.query.search : '';
-  indexer.search(search, function(results) {
-    res.render('results', { results: results.results, query: search });
+
+  indexer.search(search, function(result) {
+    var time = result.stats.timeMicros;
+    var results = result.results;
+    var numResults = result.stats.nscanned;
+
+    res.render('results', {
+      results: results, numResults: numResults, time: time, query: search
+    });
   });
 });
 
