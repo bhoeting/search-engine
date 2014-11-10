@@ -1,9 +1,19 @@
 @import url(http://fonts.googleapis.com/css?family=Italiana);
 
+body {
+  padding: 30px;
+}
+
 h1 {
-  font-family: 'Italiana';
-  font-size: 130px;
   font-weight: 200;
+  font-size: 130px;
+  font-family: 'Italiana';
+}
+
+a {
+  color: black;
+  font-style: italic;
+  text-decoration: underline; 
 }
 
 .results {
@@ -12,23 +22,25 @@ h1 {
 
 .result-link {
   display: block;
-  font-size: 20px; 
+  font-size: 20px;
   padding-bottom: 10px;
 }
 
 .input-query-md, .input-query-lg {
   background: none;
-  border: black dotted 1px;
   width: 100%;
 }
 
 .input-query-md {
-  padding: 10px;
+  padding: 15px;
   font-size: 18px;
+  border: solid gray 1px;
+  color: black;
 }
 
 .input-query-lg {
-  border-radius: 0px;
   padding: 20px;
   font-size: 36px;
+  border-radius: 0px;
+  border: black dotted 1px;
 }
