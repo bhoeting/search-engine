@@ -4,10 +4,22 @@ block content
   .container
     h1 search for anything
     form(action='search' method= 'GET')
-      input#input-query.input-query-lg(name= 'search' autocomplete= 'false')
+      input#input-query.input-query-lg(name= 'search' autocomplete= 'off')
+
+    span.count= numLinks
+    span.count-label= ' links indexed'
 
 block js
+  script(type='text/javascript' src='http://localhost:3001/socket.io/socket.io.js')
   script(type='text/javascript').
     $(function() {
+      var socket = io.connect('http://localhost:3001');
+      
+      socket.on('count', function(data) {
+        $('.count').text(data.count);
+      });
+
       $('#input-query').focus();
+
+       
     });

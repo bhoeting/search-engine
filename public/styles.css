@@ -1,13 +1,23 @@
 @import url(http://fonts.googleapis.com/css?family=Italiana);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300);
 
 body {
   padding: 30px;
 }
 
-h1 {
-  font-weight: 200;
-  font-size: 130px;
+h1, h2 {
   font-family: 'Italiana';
+}
+
+h1 {
+  font-size: 130px;
+  font-weight: 200;
+}
+
+h2 {
+  font-size: 50px;
+  font-weight: 300;
+  font-family: 'FreeSerif';
 }
 
 a {
@@ -43,4 +53,16 @@ a {
   font-size: 36px;
   border-radius: 0px;
   border: black dotted 1px;
+}
+
+.count, .count-label {
+  font-size: 45px;
+}
+
+.count {
+  font-family: 'Liberation Sans Pro';
+}
+
+.count-label {
+  font-family: 'Italiana';
 }

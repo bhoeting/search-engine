@@ -47,7 +47,9 @@ app.get('/search', function(req, res) {
  */
 
 app.get('/', function(req, res) {
-  res.render('index');
+  indexer.countLinks(function(count) {
+    res.render('index', { numLinks: count });
+  });
 });
 
 /**
