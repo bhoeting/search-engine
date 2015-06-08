@@ -5,6 +5,8 @@ Run the crawler
   
   node crawler/index.js
   
+  
 Run the search engine
   
   node index.js
+  
